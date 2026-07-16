@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'Node20'   // must match the name configured in Manage Jenkins → Tools → NodeJS installations
+        nodejs 'Node20'   
     }
 
     environment {
@@ -12,19 +12,15 @@ pipeline {
         K8S_NAMESPACE       = "default"
         ARTIFACT_DIR        = "artifacts"
     }
-    // Note: the buildable-service list (name/context/image/build-args) is defined
-    // via the services() helper function at the bottom of this file, and re-used
-    // by the build, scan, push, and cleanup stages below.
-
+    
     stages {
 
         // ── 1. Clone ──────────────────────────────────────────────────────
         stage('Clone Repository') {
             steps {
                 echo '>>> Cloning repository...'
-                // TODO: replace with the real ClassTrack repo URL/branch
                 git branch: 'main',
-                    url: 'https://github.com/<your-org>/team_5.git'
+                    url: 'https://github.com/OmarMo20/ClassTrack-Devops-Project.git'
             }
         }
 
@@ -97,10 +93,6 @@ pipeline {
                             def fullImage = "${DOCKERHUB_USERNAME}/${svc.image}:${IMAGE_TAG}"
                             echo ">>> Building Docker image: ${fullImage}"
                             if (svc.name == 'frontend') {
-                                // Frontend needs its NEXT_PUBLIC_* vars baked in at build
-                                // time. Pull real values from your Frontend/.env file
-                                // (uploaded once as a Jenkins Secret File credential)
-                                // instead of hardcoding them here or in git.
                                 withCredentials([file(credentialsId: 'frontend-env-file', variable: 'FRONTEND_ENV_FILE')]) {
                                     sh """
                                         set -a
@@ -309,8 +301,6 @@ EOF
     }
 }
 
-// Buildable services: name, Docker build context, Docker Hub image repo,
-// and (for the frontend) the build args baked in at image-build time.
 // Container/deployment names in k8s/*-deployment.yaml match `name` exactly.
 def services() {
     return [
