@@ -301,7 +301,7 @@ EOF
     }
 }
 
-// Container/deployment names in k8s/*-deployment.yaml match `name` exactly.
+// Container/deployment names in k8s/*-deployment.yaml match `name'.
 def services() {
     return [
         [name: 'auth-service',   context: 'Backend/services/auth-service',   image: 'class-track-auth-service'],
