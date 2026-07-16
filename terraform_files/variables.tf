@@ -1,0 +1,36 @@
+variable "aws_region" {
+  description = "AWS region"
+  type        = string
+  default     = "eu-central-1"
+}
+
+variable "project" {
+  description = "Project name prefix for all resources"
+  type        = string
+  default     = "electravision"
+}
+
+# Ubuntu 22.04 LTS in eu-central-1
+variable "ami_id" {
+  description = "AMI ID (Ubuntu 22.04 LTS eu-central-1)"
+  type        = string
+  default     = "ami-0faab6bdbac9486fb"
+}
+
+variable "key_pair_name" {
+  description = "Existing AWS key pair name"
+  type        = string
+  default     = "My_Key"
+}
+variable "db_username" {
+  description = "RDS MySQL username"
+  type        = string
+  default     = "admin"
+}
+
+variable "db_password" {
+  description = "RDS MySQL password"
+  type        = string
+  sensitive   = true
+  default     = "Admin1234!"
+}
