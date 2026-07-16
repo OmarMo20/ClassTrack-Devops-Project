@@ -59,6 +59,12 @@ router.post('/reset-password', [
 
 router.use(protect);
 
+// Lightweight endpoint for the API Gateway's nginx `auth_request` directive.
+// nginx only cares about the status code (200 = allow, 401 = deny) - it never
+// sees the body - so this just needs to run the same `protect` check every
+// other route already relies on, then return empty 200.
+router.get('/verify-token', (req, res) => res.sendStatus(200));
+
 router.get('/profile', authController.getProfile);
 router.patch('/profile', updateProfileValidation, authController.updateProfile);
 router.post('/change-password', changePasswordValidation, authController.changePassword);
